@@ -1,35 +1,54 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import './style.css';
+import React, { useState } from "react";
+import { createRoot } from "react-dom/client";
+import "./style.css";
 
-const MenuItem = (props) => {
+const MenuItem = ({text, onSelect}) => {
+  const handleClick = () => {
+    onSelect(text)
+  }
   return (
-    <a href="#" className="menu-item">
-      {props.text}
+    <a href="#" className="menu-item" onClick={handleClick}>
+      {text}
     </a>
   );
 };
 
 const App = () => {
+  const [menuOpened, setMenuOpened] = useState(true);
+  const [pageTitle, setPageTitle] = useState("Domů")
+
+  const handleSelectItem = (page) => {
+    setPageTitle(page);
+    setMenuOpened(false);
+  };
+
   return (
     <>
       <header>
         <div className="menu">
-          <button className="menu__btn"></button>
-          <div className="menu__items">
-            <MenuItem text="Domů" />
-            <MenuItem text="Naše nabídka" />
-            <MenuItem text="Náš tým" />
-            <MenuItem text="Blog" />
-            <MenuItem text="Kontakt" />
-          </div>
+          <button
+            onClick={() => setMenuOpened(!menuOpened)}
+            className="menu__btn"
+          ></button>
+
+          {menuOpened ? (
+            <div className="menu__items">
+              <MenuItem text="Domů" onSelect={handleSelectItem} />
+              <MenuItem text="Naše nabídka" onSelect={handleSelectItem} />
+              <MenuItem text="Náš tým" onSelect={handleSelectItem} />
+              <MenuItem text="Blog" onSelect={handleSelectItem}/>
+              <MenuItem text="Kontakt"onSelect={handleSelectItem} />
+            </div>
+          ) : (
+            <div className="menu--closed"></div>
+          )}
         </div>
       </header>
       <main>
-        <h1>Domů</h1>
+        <h1>{pageTitle}</h1>
       </main>
     </>
   );
 };
 
-createRoot(document.querySelector('#app')).render(<App />);
+createRoot(document.querySelector("#app")).render(<App />);
